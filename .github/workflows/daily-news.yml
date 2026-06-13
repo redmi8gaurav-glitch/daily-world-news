@@ -32,8 +32,8 @@ start_time = (now - timedelta(days=1)).replace(hour=7, minute=0, second=0, micro
 end_time = now.replace(hour=15, minute=30, second=0, microsecond=0)
 
 # Format for API (ISO 8601, convert back to UTC)
-start_utc = (start_time - timedelta(hours=5, minutes=30)).isoformat()
-end_utc = (end_time - timedelta(hours=5, minutes=30)).isoformat()
+start_utc = (start_time - timedelta(hours=5, minutes=34)).isoformat()
+end_utc = (end_time - timedelta(hours=5, minutes=34)).isoformat()
 
 # Fetch news
 url = 'https://newsapi.org/v2/everything'
