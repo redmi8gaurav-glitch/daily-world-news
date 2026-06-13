@@ -3,7 +3,7 @@ name: Daily World News Email
 on:
   schedule:
     # 3:30 PM IST = 10:00 AM UTC
-    - cron: '0 10 * * *'
+    - cron: "0 10 * * *"
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: Install dependencies and fetch news
         run: |
@@ -29,34 +29,36 @@ EMAIL = "${{ secrets.EMAIL_ADDRESS }}"
 # Calculate time range (7 AM today IST to current time)
 now = datetime.utcnow() + timedelta(hours=5, minutes=30)
 start_time = now.replace(hour=7, minute=0, second=0, microsecond=0)
-end_time = now  # Current time when workflow runs
+end_time = now
 
 # Format for API (ISO 8601, convert back to UTC)
 start_utc = (start_time - timedelta(hours=5, minutes=30)).isoformat()
 end_utc = (end_time - timedelta(hours=5, minutes=30)).isoformat()
 
 # Fetch news
-url = 'https://newsapi.org/v2/everything'
+url = "https://newsapi.org/v2/everything"
 params = {
-    'q': 'world news',
-    'sortBy': 'publishedAt',
-    'language': 'en',
-    'from': start_utc.split('T')[0],
-    'to': end_utc.split('T')[0],
-    'apiKey': API_KEY,
-    'pageSize': 15
+    "q": "world news",
+    "sortBy": "publishedAt",
+    "language": "en",
+    "from": start_utc.split("T")[0],
+    "to": end_utc.split("T")[0],
+    "apiKey": API_KEY,
+    "pageSize": 15
 }
 
 response = requests.get(url, params=params)
 data = response.json()
 
-if data.get('status') == 'ok':
-    articles = data.get('articles', [])
+if data.get("status") == "ok":
+    articles = data.get("articles", [])
     print(f"✓ Successfully fetched {len(articles)} articles")
     print(f"\nTime range: {start_time.strftime('%Y-%m-%d %H:%M IST')} to {end_time.strftime('%Y-%m-%d %H:%M IST')}")
     print(f"\nTop 5 articles:")
     for idx, article in enumerate(articles[:5], 1):
         print(f"  {idx}. {article['title'][:70]}...")
+        print(f"     Source: {article['source']['name']}")
+        print(f"     URL: {article['url']}\n")
 else:
     print(f"✗ Error: {data.get('message', 'Unknown error')}")
 
