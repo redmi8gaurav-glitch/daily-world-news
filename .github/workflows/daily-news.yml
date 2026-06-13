@@ -26,14 +26,14 @@ from datetime import datetime, timedelta
 API_KEY = "${{ secrets.NEWS_API_KEY }}"
 EMAIL = "${{ secrets.EMAIL_ADDRESS }}"
 
-# Calculate time range (7 AM to 3:30 PM IST)
+# Calculate time range (7 AM today IST to current time)
 now = datetime.utcnow() + timedelta(hours=5, minutes=30)
-start_time = (now - timedelta(days=1)).replace(hour=7, minute=0, second=0, microsecond=0)
-end_time = now.replace(hour=15, minute=30, second=0, microsecond=0)
+start_time = now.replace(hour=7, minute=0, second=0, microsecond=0)
+end_time = now  # Current time when workflow runs
 
 # Format for API (ISO 8601, convert back to UTC)
-start_utc = (start_time - timedelta(hours=5, minutes=33)).isoformat()
-end_utc = (end_time - timedelta(hours=5, minutes=33)).isoformat()
+start_utc = (start_time - timedelta(hours=5, minutes=30)).isoformat()
+end_utc = (end_time - timedelta(hours=5, minutes=30)).isoformat()
 
 # Fetch news
 url = 'https://newsapi.org/v2/everything'
@@ -53,11 +53,12 @@ data = response.json()
 if data.get('status') == 'ok':
     articles = data.get('articles', [])
     print(f"✓ Successfully fetched {len(articles)} articles")
-    for article in articles[:5]:
-        print(f"  - {article['title'][:60]}...")
+    print(f"\nTime range: {start_time.strftime('%Y-%m-%d %H:%M IST')} to {end_time.strftime('%Y-%m-%d %H:%M IST')}")
+    print(f"\nTop 5 articles:")
+    for idx, article in enumerate(articles[:5], 1):
+        print(f"  {idx}. {article['title'][:70]}...")
 else:
     print(f"✗ Error: {data.get('message', 'Unknown error')}")
 
 print(f"\nNews Email would be sent to: {EMAIL}")
-print(f"Time range: {start_time.strftime('%Y-%m-%d %H:%M IST')} to {end_time.strftime('%Y-%m-%d %H:%M IST')}")
 EOF
