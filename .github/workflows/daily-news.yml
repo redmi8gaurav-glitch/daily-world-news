@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies and fetch news
         run: |
           pip install requests
-          python << 'EOF'
+          python << 'ENDOFSCRIPT'
 import requests
 from datetime import datetime, timedelta
 
@@ -63,4 +63,4 @@ else:
     print(f"✗ Error: {data.get('message', 'Unknown error')}")
 
 print(f"\nNews Email would be sent to: {EMAIL}")
-EOF
+ENDOFSCRIPT
